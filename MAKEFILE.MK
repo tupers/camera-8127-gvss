@@ -1,0 +1,11 @@
+INTERFACE_DIR := $(shell pwd)/interface
+PUBLIC_INCLUDE_DIR := $(INTERFACE_DIR)/inc
+PUBLIC_LIB_DIR := $(INTERFACE_DIR)/lib
+
+CROSS_COMPILE := arm-arago-linux-gnueabi-
+#CROSS_COMPILE :=
+
+export INTERFACE_DIR
+export PUBLIC_INCLUDE_DIR 
+export PUBLIC_LIB_DIR
+export CROSS_COMPILE
