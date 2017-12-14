@@ -12,6 +12,7 @@
 static AlgObj	obj;
 
 extern unsigned int gLogDeamonQuit;
+extern unsigned plcStatFlag;
 
 int SetEnv(AlgObj *pObj)
 {
@@ -228,7 +229,11 @@ static int ProcMsgTread(void *pPrm)
 				OSA_ShareMemRead(pObj->shmid,msgbuf.offset,pObj->pData, msgbuf.size);		
 				pObj->dataSize = msgbuf.size;
 
-//				logfile_write(pObj->pData);				
+				if(plcStatFlag == 1)
+				{
+//					logfile_write(pObj->pData);						
+				}
+			
 				OSA_semWait(&(pObj->hndl), OSA_TIMEOUT_FOREVER);
 #if 1				
 				if(pObj->PlcTarget == 1)

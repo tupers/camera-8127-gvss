@@ -349,14 +349,14 @@ int logfile_write(Gvss_Result_Str *result)
 	
 	if(result == NULL)
 		return 0;
-
+#if 0
 	log.distance = result->distance;
 	log.position = result->position;
 		
 	fp = openLogFile();
 	if(fp != NULL)
 	{
-#if 0	
+	
 		unsigned int size;
 		size = sizeof(Gvss_Result_Str) - sizeof(result->block) + sizeof(Gvss_Result_BlockStr) * result->blockNum;
 	
@@ -367,7 +367,7 @@ int logfile_write(Gvss_Result_Str *result)
 		}	
 	
 		ret = fwrite(result, 1, size,fp);
-#endif	
+
 		if((log.position - lastPosition < POSITION_DIFF) && (log.position != 0))
 			;
 		else
@@ -384,12 +384,11 @@ int logfile_write(Gvss_Result_Str *result)
 			lastPosition = log.position;
 		}	
 	}
-
-	errlogfile_write(result);
+#endif	
 	
 	if((log.distance == 0) &&(log.position == 0))
 	{
-//		errlogfile_write(result);
+		errlogfile_write(result);
 	}
 	
 	return ret;
