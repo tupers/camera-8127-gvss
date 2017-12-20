@@ -183,7 +183,7 @@ int AppClient_Quit(AlgObj *pObj)
 	return  OSA_Msg_Send( pObj->qid, &msgbuf , sizeof(msgbuf));	
 }
 
-
+extern unsigned algSave;
 static int ProcMsgTread(void *pPrm)
 {
 	AlgObj *pObj = (AlgObj *)pPrm;
@@ -195,6 +195,8 @@ static int ProcMsgTread(void *pPrm)
 	unsigned int eCount = 0;
 	
 	msgbuf.ret = 0;
+
+	static unsigned saveCnt = 0;
 
 	AppClient_Start(pObj);
 	
@@ -229,9 +231,15 @@ static int ProcMsgTread(void *pPrm)
 				OSA_ShareMemRead(pObj->shmid,msgbuf.offset,pObj->pData, msgbuf.size);		
 				pObj->dataSize = msgbuf.size;
 
-				if(plcStatFlag == 1)
+				if(algSave == 1)
 				{
-//					logfile_write(pObj->pData);						
+					if(saveCnt == 5)
+					{
+						saveCnt = 0;
+						algSave = 0;					
+					}					
+					saveCnt++;
+					logfile_write(pObj->pData);						
 				}
 			
 				OSA_semWait(&(pObj->hndl), OSA_TIMEOUT_FOREVER);

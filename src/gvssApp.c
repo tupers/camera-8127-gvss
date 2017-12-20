@@ -7,8 +7,10 @@
 
 //#define BAUM_CAMERA_TYPE	
 #define DATA_FROM_BAUME		1
-#define DATA_FROM_SSZ		0	
-unsigned plcStatFlag = 1;
+#define DATA_FROM_SSZ		0
+	
+unsigned plcStatFlag = DATA_FROM_BAUME;
+unsigned algSave = 0;
 static GvssObj gGvss;
 
 static int InitGvss(GvssObj *pObj)
@@ -94,7 +96,7 @@ void *GvsstskThrMain(void *pPrm)
 	AlgResultFrame *pFullFrame;
 	Gvss_Result_Str *pResult;
 	unsigned int size;	
-
+	
 	gGvssQuit = 0;
 	if(InitGvss(&gGvss) < 0)
 		return (void *)0;
@@ -103,6 +105,7 @@ void *GvsstskThrMain(void *pPrm)
 
 	GvsstoPlc info;
 	
+	algSave = 0;
 	while(gGvssQuit == 0)
 	{
 		status = gGvss.Com.wait_for_client(&(gGvss.Com));
@@ -149,6 +152,8 @@ void *GvsstskThrMain(void *pPrm)
 				}
 				else
 				{
+					if((gRecvBuf[0] != plcStatFlag) && (gRecvBuf[0] == DATA_FROM_BAUME))
+						algSave = 1;
 					plcStatFlag = gRecvBuf[0];
 				}
 				
